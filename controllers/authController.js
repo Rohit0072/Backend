@@ -6,38 +6,51 @@ import User from "../models/User.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
 
+    // Validate Input Fields
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    let userExists = await User.findOne({ email });
+    // Convert email to lowercase for consistency
+    const lowerEmail = email.toLowerCase();
+
+    // Validate Email Format
+    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
+    if (!emailRegex.test(lowerEmail)) {
+      return res.status(400).json({ success: false, message: "Please enter a valid email address" });
+    }
+
+    // Validate Password Strength
+    if (password.length < 6) {
+      return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
+    }
+
+    // Check if User Exists
+    const userExists = await User.findOne({ email: lowerEmail });
     if (userExists) {
       return res.status(400).json({ success: false, message: "Email already registered" });
     }
 
+    // Hash Password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
 
-
-    const user = new User({ name, email, password: hashedPassword });
+    // Create User
+    const user = new User({ name, email: lowerEmail, password: hashedPassword });
     await user.save();
 
-
-    const savedUser = await User.findOne({ email });
-
     res.status(201).json({ success: true, message: "User registered successfully" });
-
   } catch (err) {
-    console.error(" Error in Registration:", err);
+    console.error("Error in Registration:", err);
+
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ success: false, message: err.message });
+    }
+
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
-
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -74,14 +87,17 @@ export const login = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("jwt");
-    res.json({ success: true, message: "Logged out" });
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
+
+    res.json({ success: true, message: "Logged out successfully" });
   } catch (err) {
+    console.error("Error in Logout:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
