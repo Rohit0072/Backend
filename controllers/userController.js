@@ -1,6 +1,3 @@
-// @desc    Get current logged in user
-// @route   GET /api/user
-// @access  Private
 export const getMe = async (req, res, next) => {
   try {
     const user = {

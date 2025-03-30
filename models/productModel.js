@@ -1,4 +1,4 @@
-import productDB from '../config/dbProducts.js'; // Import the product database connection
+import productDB from '../config/dbProducts.js'; 
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({

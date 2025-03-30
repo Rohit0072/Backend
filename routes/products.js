@@ -3,24 +3,17 @@ import Product from '../models/productModel.js';
 
 const router = express.Router();
 
-// GET all products
+// GET all products (with optional category filter)
 router.get('/', async (req, res) => {
     try {
-        const products = await Product.find();
-        console.log("Fetched Products:", products); // Debugging Log
+        const { category } = req.query;
+        let query = {};
+        if (category) query.category = category;
+
+        const products = await Product.find(query);
         res.json(products);
     } catch (err) {
         console.error("Error fetching products:", err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// GET products by category
-router.get('/:category', async (req, res) => {
-    try {
-        const products = await Product.find({ category: req.params.category });
-        res.json(products);
-    } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
@@ -35,6 +28,8 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: err.message });
     }
 });
+
+// PUT (Update) a product by ID
 router.put('/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -52,13 +47,13 @@ router.put('/:id', async (req, res) => {
         product.image = image || product.image;
 
         const updatedProduct = await product.save();
-
         res.json(updatedProduct);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 });
+
 // DELETE a product by ID
 router.delete('/:id', async (req, res) => {
     try {
@@ -72,6 +67,5 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ success: false, message: "Server Error", error: error.message });
     }
 });
-
 
 export default router;

@@ -21,9 +21,7 @@ const connectProductDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("✅ Product Database Connected Successfully");
   } catch (error) {
-    console.error("❌ Product Database Connection Error:", error);
     process.exit(1);
   }
 };
@@ -65,5 +63,4 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
 });
