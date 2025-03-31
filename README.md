@@ -36,11 +36,11 @@ Welcome to the **E-commerce Platform Backend** repository! This project serves a
 
 ### Product Management Endpoint
 
-![Product Management](https://raw.githubusercontent.com/Rohit0072/Backend/screenshot/product_management.png)
+![Product Management](https://raw.githubusercontent.com/Rohit0072/Backend/main/screenshot/product_management.png)
 
 ### User Authentication Endpoint
 
-![User Authentication](https://raw.githubusercontent.com/Rohit0072/Backend/screenshots/user_authentication.png)
+![User Authentication](https://raw.githubusercontent.com/Rohit0072/Backend/main/screenshot/user_authentication.png)
 
 ---
 
