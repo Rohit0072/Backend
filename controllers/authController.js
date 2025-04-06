@@ -7,36 +7,34 @@ export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Validate Input Fields
+
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    // Convert email to lowercase for consistency
+
     const lowerEmail = email.toLowerCase();
 
-    // Validate Email Format
     const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/;
     if (!emailRegex.test(lowerEmail)) {
       return res.status(400).json({ success: false, message: "Please enter a valid email address" });
     }
 
-    // Validate Password Strength
+
     if (password.length < 6) {
       return res.status(400).json({ success: false, message: "Password must be at least 6 characters" });
     }
 
-    // Check if User Exists
     const userExists = await User.findOne({ email: lowerEmail });
     if (userExists) {
       return res.status(400).json({ success: false, message: "Email already registered" });
     }
 
-    // Hash Password
+    // hash Password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create User
+    // create user
     const user = new User({ name, email: lowerEmail, password: hashedPassword });
     await user.save();
 

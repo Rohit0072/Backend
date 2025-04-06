@@ -2,8 +2,6 @@ import express from 'express';
 import Product from '../models/productModel.js';
 
 const router = express.Router();
-
-// GET all products (with optional category filter)
 router.get('/', async (req, res) => {
     try {
         const { category } = req.query;
@@ -18,7 +16,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST a new product
 router.post('/', async (req, res) => {
     try {
         const newProduct = new Product(req.body);
@@ -29,7 +26,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PUT (Update) a product by ID
 router.put('/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -54,7 +50,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// DELETE a product by ID
 router.delete('/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -65,6 +60,35 @@ router.delete('/:id', async (req, res) => {
         res.json({ success: true, message: "Product deleted successfully" });
     } catch (error) {
         res.status(500).json({ success: false, message: "Server Error", error: error.message });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            product: {
+                _id: product._id,
+                name: product.name,
+                title: product.title,
+                category: product.category,
+                price: product.price,
+                description: product.description,
+                image: product.image,
+                images: product.images,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            },
+        });
+    } catch (err) {
+        console.error('Error fetching product by ID:', err);
+        res.status(500).json({ success: false, message: 'Server Error' });
     }
 });
 
