@@ -32,7 +32,7 @@ const app = express();
 
 const allowedOrigins = [
   "https://ecommerseplatform-rohit0072-rohit0072s-projects.vercel.app", 
-  "https://adminpannel-teal.vercel.app/",
+  "https://adminpannel-teal.vercel.app",
   "http://localhost:3000",
 ];
 
