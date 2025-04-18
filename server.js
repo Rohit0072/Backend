@@ -30,15 +30,10 @@ connectProductDB();
 
 const app = express();
 
-const allowedOrigins = [
-  "https://ecommerseplatform-rohit0072-rohit0072s-projects.vercel.app", 
-  "https://adminpannel-teal.vercel.app",
-  "http://localhost:3000",
-];
-
+// Allow all origins - Open CORS access
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: true,
     credentials: true,
   })
 );
